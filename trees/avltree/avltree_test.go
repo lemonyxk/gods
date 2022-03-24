@@ -6,6 +6,8 @@ package avltree
 import (
 	"fmt"
 	"testing"
+
+	"github.com/lemonyxk/gods/utils"
 )
 
 func TestAVLTreePut(t *testing.T) {
@@ -23,10 +25,10 @@ func TestAVLTreePut(t *testing.T) {
 		t.Errorf("Got %v expected %v", actualValue, 7)
 	}
 
-	if actualValue, expectedValue := fmt.Sprintf("%d%d%d%d%d%d%d", toAny(tree.Keys())...), "1234567"; actualValue != expectedValue {
+	if actualValue, expectedValue := fmt.Sprintf("%d%d%d%d%d%d%d", utils.ToAny(tree.Keys())...), "1234567"; actualValue != expectedValue {
 		t.Errorf("Got %v expected %v", actualValue, expectedValue)
 	}
-	if actualValue, expectedValue := fmt.Sprintf("%s%s%s%s%s%s%s", toAny(tree.Values())...), "abcdefg"; actualValue != expectedValue {
+	if actualValue, expectedValue := fmt.Sprintf("%s%s%s%s%s%s%s", utils.ToAny(tree.Values())...), "abcdefg"; actualValue != expectedValue {
 		t.Errorf("Got %v expected %v", actualValue, expectedValue)
 	}
 
@@ -50,14 +52,6 @@ func TestAVLTreePut(t *testing.T) {
 	}
 }
 
-func toAny[T any](r []T) []any {
-	var res []any
-	for i := 0; i < len(r); i++ {
-		res = append(res, r[i])
-	}
-	return res
-}
-
 func TestAVLTreeRemove(t *testing.T) {
 	tree := NewWithIntComparator[int, string]()
 	tree.Put(5, "e")
@@ -75,13 +69,13 @@ func TestAVLTreeRemove(t *testing.T) {
 	tree.Remove(8)
 	tree.Remove(5)
 
-	if actualValue, expectedValue := fmt.Sprintf("%d%d%d%d", toAny(tree.Keys())...), "1234"; actualValue != expectedValue {
+	if actualValue, expectedValue := fmt.Sprintf("%d%d%d%d", utils.ToAny(tree.Keys())...), "1234"; actualValue != expectedValue {
 		t.Errorf("Got %v expected %v", actualValue, expectedValue)
 	}
-	if actualValue, expectedValue := fmt.Sprintf("%s%s%s%s", toAny(tree.Values())...), "abcd"; actualValue != expectedValue {
+	if actualValue, expectedValue := fmt.Sprintf("%s%s%s%s", utils.ToAny(tree.Values())...), "abcd"; actualValue != expectedValue {
 		t.Errorf("Got %v expected %v", actualValue, expectedValue)
 	}
-	if actualValue, expectedValue := fmt.Sprintf("%s%s%s%s", toAny(tree.Values())...), "abcd"; actualValue != expectedValue {
+	if actualValue, expectedValue := fmt.Sprintf("%s%s%s%s", utils.ToAny(tree.Values())...), "abcd"; actualValue != expectedValue {
 		t.Errorf("Got %v expected %v", actualValue, expectedValue)
 	}
 	if actualValue := tree.Size(); actualValue != 4 {
@@ -113,7 +107,7 @@ func TestAVLTreeRemove(t *testing.T) {
 	tree.Remove(2)
 	tree.Remove(2)
 
-	if actualValue, expectedValue := fmt.Sprintf("%s", toAny(tree.Keys())), "[]"; actualValue != expectedValue {
+	if actualValue, expectedValue := fmt.Sprintf("%s", utils.ToAny(tree.Keys())), "[]"; actualValue != expectedValue {
 		t.Errorf("Got %v expected %v", actualValue, expectedValue)
 	}
 	if actualValue, expectedValue := fmt.Sprintf("%s", tree.Values()), "[]"; actualValue != expectedValue {

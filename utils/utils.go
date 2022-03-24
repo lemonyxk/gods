@@ -45,3 +45,11 @@ func ToString(value interface{}) string {
 		return fmt.Sprintf("%+v", value)
 	}
 }
+
+func ToAny[T any](r []T) []any {
+	var res []any
+	for i := 0; i < len(r); i++ {
+		res = append(res, r[i])
+	}
+	return res
+}

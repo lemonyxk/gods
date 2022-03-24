@@ -4,19 +4,19 @@
 
 package binaryheap
 
-import "github.com/emirpasic/gods/containers"
+import "github.com/lemonyxk/gods/containers"
 
-func assertSerializationImplementation() {
-	var _ containers.JSONSerializer = (*Heap)(nil)
-	var _ containers.JSONDeserializer = (*Heap)(nil)
+func assertSerializationImplementation[T comparable]() {
+	var _ containers.JSONSerializer = (*Heap[T])(nil)
+	var _ containers.JSONDeserializer = (*Heap[T])(nil)
 }
 
 // ToJSON outputs the JSON representation of the heap.
-func (heap *Heap) ToJSON() ([]byte, error) {
+func (heap *Heap[T]) ToJSON() ([]byte, error) {
 	return heap.list.ToJSON()
 }
 
 // FromJSON populates the heap from the input JSON representation.
-func (heap *Heap) FromJSON(data []byte) error {
+func (heap *Heap[T]) FromJSON(data []byte) error {
 	return heap.list.FromJSON(data)
 }

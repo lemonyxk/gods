@@ -10,7 +10,8 @@ import (
 )
 
 func TestBinaryHeapPush(t *testing.T) {
-	heap := NewWithIntComparator()
+
+	heap := NewWithIntComparator[int]()
 
 	if actualValue := heap.Empty(); actualValue != true {
 		t.Errorf("Got %v expected %v", actualValue, true)
@@ -20,7 +21,7 @@ func TestBinaryHeapPush(t *testing.T) {
 	heap.Push(2) // [2,3]
 	heap.Push(1) // [1,3,2](2 swapped with 1, hence last)
 
-	if actualValue := heap.Values(); actualValue[0].(int) != 1 || actualValue[1].(int) != 3 || actualValue[2].(int) != 2 {
+	if actualValue := heap.Values(); actualValue[0] != 1 || actualValue[1] != 3 || actualValue[2] != 2 {
 		t.Errorf("Got %v expected %v", actualValue, "[1,2,3]")
 	}
 	if actualValue := heap.Empty(); actualValue != false {
@@ -35,11 +36,11 @@ func TestBinaryHeapPush(t *testing.T) {
 }
 
 func TestBinaryHeapPushBulk(t *testing.T) {
-	heap := NewWithIntComparator()
+	heap := NewWithIntComparator[int]()
 
 	heap.Push(15, 20, 3, 1, 2)
 
-	if actualValue := heap.Values(); actualValue[0].(int) != 1 || actualValue[1].(int) != 2 || actualValue[2].(int) != 3 {
+	if actualValue := heap.Values(); actualValue[0] != 1 || actualValue[1] != 2 || actualValue[2] != 3 {
 		t.Errorf("Got %v expected %v", actualValue, "[1,2,3]")
 	}
 	if actualValue, ok := heap.Pop(); actualValue != 1 || !ok {
@@ -48,7 +49,7 @@ func TestBinaryHeapPushBulk(t *testing.T) {
 }
 
 func TestBinaryHeapPop(t *testing.T) {
-	heap := NewWithIntComparator()
+	heap := NewWithIntComparator[int]()
 
 	if actualValue := heap.Empty(); actualValue != true {
 		t.Errorf("Got %v expected %v", actualValue, true)
@@ -68,7 +69,7 @@ func TestBinaryHeapPop(t *testing.T) {
 	if actualValue, ok := heap.Pop(); actualValue != 3 || !ok {
 		t.Errorf("Got %v expected %v", actualValue, 3)
 	}
-	if actualValue, ok := heap.Pop(); actualValue != nil || ok {
+	if actualValue, ok := heap.Pop(); actualValue != 0 || ok {
 		t.Errorf("Got %v expected %v", actualValue, nil)
 	}
 	if actualValue := heap.Empty(); actualValue != true {
@@ -80,7 +81,7 @@ func TestBinaryHeapPop(t *testing.T) {
 }
 
 func TestBinaryHeapRandom(t *testing.T) {
-	heap := NewWithIntComparator()
+	heap := NewWithIntComparator[int]()
 
 	rand.Seed(3)
 	for i := 0; i < 10000; i++ {
@@ -91,7 +92,7 @@ func TestBinaryHeapRandom(t *testing.T) {
 	prev, _ := heap.Pop()
 	for !heap.Empty() {
 		curr, _ := heap.Pop()
-		if prev.(int) > curr.(int) {
+		if prev > curr {
 			t.Errorf("Heap property invalidated. prev: %v current: %v", prev, curr)
 		}
 		prev = curr
@@ -99,7 +100,7 @@ func TestBinaryHeapRandom(t *testing.T) {
 }
 
 func TestBinaryHeapIteratorOnEmpty(t *testing.T) {
-	heap := NewWithIntComparator()
+	heap := NewWithIntComparator[int]()
 	it := heap.Iterator()
 	for it.Next() {
 		t.Errorf("Shouldn't iterate on empty heap")
@@ -107,7 +108,7 @@ func TestBinaryHeapIteratorOnEmpty(t *testing.T) {
 }
 
 func TestBinaryHeapIteratorNext(t *testing.T) {
-	heap := NewWithIntComparator()
+	heap := NewWithIntComparator[int]()
 	heap.Push(3) // [3]
 	heap.Push(2) // [2,3]
 	heap.Push(1) // [1,3,2](2 swapped with 1, hence last)
@@ -144,7 +145,7 @@ func TestBinaryHeapIteratorNext(t *testing.T) {
 }
 
 func TestBinaryHeapIteratorPrev(t *testing.T) {
-	heap := NewWithIntComparator()
+	heap := NewWithIntComparator[int]()
 	heap.Push(3) // [3]
 	heap.Push(2) // [2,3]
 	heap.Push(1) // [1,3,2](2 swapped with 1, hence last)
@@ -183,7 +184,7 @@ func TestBinaryHeapIteratorPrev(t *testing.T) {
 }
 
 func TestBinaryHeapIteratorBegin(t *testing.T) {
-	heap := NewWithIntComparator()
+	heap := NewWithIntComparator[int]()
 	it := heap.Iterator()
 	it.Begin()
 	heap.Push(2)
@@ -199,7 +200,7 @@ func TestBinaryHeapIteratorBegin(t *testing.T) {
 }
 
 func TestListIteratorEnd(t *testing.T) {
-	heap := NewWithIntComparator()
+	heap := NewWithIntComparator[int]()
 	it := heap.Iterator()
 
 	if index := it.Index(); index != -1 {
@@ -226,7 +227,7 @@ func TestListIteratorEnd(t *testing.T) {
 }
 
 func TestStackIteratorFirst(t *testing.T) {
-	heap := NewWithIntComparator()
+	heap := NewWithIntComparator[int]()
 	it := heap.Iterator()
 	if actualValue, expectedValue := it.First(), false; actualValue != expectedValue {
 		t.Errorf("Got %v expected %v", actualValue, expectedValue)
@@ -243,7 +244,7 @@ func TestStackIteratorFirst(t *testing.T) {
 }
 
 func TestBinaryHeapIteratorLast(t *testing.T) {
-	tree := NewWithIntComparator()
+	tree := NewWithIntComparator[int]()
 	it := tree.Iterator()
 	if actualValue, expectedValue := it.Last(), false; actualValue != expectedValue {
 		t.Errorf("Got %v expected %v", actualValue, expectedValue)
@@ -260,7 +261,7 @@ func TestBinaryHeapIteratorLast(t *testing.T) {
 }
 
 func TestBinaryHeapSerialization(t *testing.T) {
-	heap := NewWithStringComparator()
+	heap := NewWithStringComparator[string]()
 
 	heap.Push("c") // ["c"]
 	heap.Push("b") // ["b","c"]
@@ -268,7 +269,7 @@ func TestBinaryHeapSerialization(t *testing.T) {
 
 	var err error
 	assert := func() {
-		if actualValue := heap.Values(); actualValue[0].(string) != "a" || actualValue[1].(string) != "c" || actualValue[2].(string) != "b" {
+		if actualValue := heap.Values(); actualValue[0] != "a" || actualValue[1] != "c" || actualValue[2] != "b" {
 			t.Errorf("Got %v expected %v", actualValue, "[1,3,2]")
 		}
 		if actualValue := heap.Size(); actualValue != 3 {
@@ -291,7 +292,7 @@ func TestBinaryHeapSerialization(t *testing.T) {
 	assert()
 }
 
-func benchmarkPush(b *testing.B, heap *Heap, size int) {
+func benchmarkPush[T int](b *testing.B, heap *Heap[int], size int) {
 	for i := 0; i < b.N; i++ {
 		for n := 0; n < size; n++ {
 			heap.Push(n)
@@ -299,7 +300,7 @@ func benchmarkPush(b *testing.B, heap *Heap, size int) {
 	}
 }
 
-func benchmarkPop(b *testing.B, heap *Heap, size int) {
+func benchmarkPop(b *testing.B, heap *Heap[int], size int) {
 	for i := 0; i < b.N; i++ {
 		for n := 0; n < size; n++ {
 			heap.Pop()
@@ -310,7 +311,7 @@ func benchmarkPop(b *testing.B, heap *Heap, size int) {
 func BenchmarkBinaryHeapPop100(b *testing.B) {
 	b.StopTimer()
 	size := 100
-	heap := NewWithIntComparator()
+	heap := NewWithIntComparator[int]()
 	for n := 0; n < size; n++ {
 		heap.Push(n)
 	}
@@ -321,7 +322,7 @@ func BenchmarkBinaryHeapPop100(b *testing.B) {
 func BenchmarkBinaryHeapPop1000(b *testing.B) {
 	b.StopTimer()
 	size := 1000
-	heap := NewWithIntComparator()
+	heap := NewWithIntComparator[int]()
 	for n := 0; n < size; n++ {
 		heap.Push(n)
 	}
@@ -332,7 +333,7 @@ func BenchmarkBinaryHeapPop1000(b *testing.B) {
 func BenchmarkBinaryHeapPop10000(b *testing.B) {
 	b.StopTimer()
 	size := 10000
-	heap := NewWithIntComparator()
+	heap := NewWithIntComparator[int]()
 	for n := 0; n < size; n++ {
 		heap.Push(n)
 	}
@@ -343,7 +344,7 @@ func BenchmarkBinaryHeapPop10000(b *testing.B) {
 func BenchmarkBinaryHeapPop100000(b *testing.B) {
 	b.StopTimer()
 	size := 100000
-	heap := NewWithIntComparator()
+	heap := NewWithIntComparator[int]()
 	for n := 0; n < size; n++ {
 		heap.Push(n)
 	}
@@ -354,40 +355,40 @@ func BenchmarkBinaryHeapPop100000(b *testing.B) {
 func BenchmarkBinaryHeapPush100(b *testing.B) {
 	b.StopTimer()
 	size := 100
-	heap := NewWithIntComparator()
+	heap := NewWithIntComparator[int]()
 	b.StartTimer()
-	benchmarkPush(b, heap, size)
+	benchmarkPush[int](b, heap, size)
 }
 
 func BenchmarkBinaryHeapPush1000(b *testing.B) {
 	b.StopTimer()
 	size := 1000
-	heap := NewWithIntComparator()
+	heap := NewWithIntComparator[int]()
 	for n := 0; n < size; n++ {
 		heap.Push(n)
 	}
 	b.StartTimer()
-	benchmarkPush(b, heap, size)
+	benchmarkPush[int](b, heap, size)
 }
 
 func BenchmarkBinaryHeapPush10000(b *testing.B) {
 	b.StopTimer()
 	size := 10000
-	heap := NewWithIntComparator()
+	heap := NewWithIntComparator[int]()
 	for n := 0; n < size; n++ {
 		heap.Push(n)
 	}
 	b.StartTimer()
-	benchmarkPush(b, heap, size)
+	benchmarkPush[int](b, heap, size)
 }
 
 func BenchmarkBinaryHeapPush100000(b *testing.B) {
 	b.StopTimer()
 	size := 100000
-	heap := NewWithIntComparator()
+	heap := NewWithIntComparator[int]()
 	for n := 0; n < size; n++ {
 		heap.Push(n)
 	}
 	b.StartTimer()
-	benchmarkPush(b, heap, size)
+	benchmarkPush[int](b, heap, size)
 }

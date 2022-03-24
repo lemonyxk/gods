@@ -6,17 +6,18 @@ package btree
 
 import (
 	"encoding/json"
+
 	"github.com/emirpasic/gods/containers"
 	"github.com/emirpasic/gods/utils"
 )
 
-func assertSerializationImplementation() {
-	var _ containers.JSONSerializer = (*Tree)(nil)
-	var _ containers.JSONDeserializer = (*Tree)(nil)
+func assertSerializationImplementation[T comparable, P any]() {
+	var _ containers.JSONSerializer = (*Tree[T, P])(nil)
+	var _ containers.JSONDeserializer = (*Tree[T, P])(nil)
 }
 
 // ToJSON outputs the JSON representation of the tree.
-func (tree *Tree) ToJSON() ([]byte, error) {
+func (tree *Tree[T, P]) ToJSON() ([]byte, error) {
 	elements := make(map[string]interface{})
 	it := tree.Iterator()
 	for it.Next() {
@@ -26,8 +27,8 @@ func (tree *Tree) ToJSON() ([]byte, error) {
 }
 
 // FromJSON populates the tree from the input JSON representation.
-func (tree *Tree) FromJSON(data []byte) error {
-	elements := make(map[string]interface{})
+func (tree *Tree[T, P]) FromJSON(data []byte) error {
+	elements := make(map[T]P)
 	err := json.Unmarshal(data, &elements)
 	if err == nil {
 		tree.Clear()

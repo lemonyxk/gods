@@ -53,3 +53,8 @@ func ToAny[T any](r []T) []any {
 	}
 	return res
 }
+
+func AnyEmpty[T any]() T {
+	var t T
+	return t
+}

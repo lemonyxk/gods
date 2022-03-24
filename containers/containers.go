@@ -13,23 +13,23 @@
 // Serialization provides serializers (marshalers) and deserializers (unmarshalers).
 package containers
 
-import "github.com/emirpasic/gods/utils"
+import "github.com/lemonyxk/gods/utils"
 
 // Container is base interface that all data structures implement.
-type Container interface {
+type Container[P any] interface {
 	Empty() bool
 	Size() int
 	Clear()
-	Values() []interface{}
+	Values() []P
 }
 
 // GetSortedValues returns sorted container's elements with respect to the passed comparator.
 // Does not effect the ordering of elements within the container.
-func GetSortedValues(container Container, comparator utils.Comparator) []interface{} {
+func GetSortedValues[P any](container Container[P], comparator utils.Comparator) []P {
 	values := container.Values()
 	if len(values) < 2 {
 		return values
 	}
-	utils.Sort(values, comparator)
+	utils.Sort[P](values, comparator)
 	return values
 }

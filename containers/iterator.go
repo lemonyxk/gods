@@ -31,7 +31,7 @@ type IteratorWithIndex interface {
 }
 
 // IteratorWithKey is a stateful iterator for ordered containers whose elements are key value pairs.
-type IteratorWithKey interface {
+type IteratorWithKey[T comparable, P any] interface {
 	// Next moves the iterator to the next element and returns true if there was a next element in the container.
 	// If Next() returns true, then next element's key and value can be retrieved by Key() and Value().
 	// If Next() was called for the first time, then it will point the iterator to the first element if it exists.
@@ -40,11 +40,11 @@ type IteratorWithKey interface {
 
 	// Value returns the current element's value.
 	// Does not modify the state of the iterator.
-	Value() interface{}
+	Value() P
 
 	// Key returns the current element's key.
 	// Does not modify the state of the iterator.
-	Key() interface{}
+	Key() T
 
 	// Begin resets the iterator to its initial state (one-before-first)
 	// Call Next() to fetch the first element if any.
@@ -90,7 +90,7 @@ type ReverseIteratorWithIndex interface {
 // Prev() function to enable traversal in reverse
 //
 // Last() function to move the iterator to the last element.
-type ReverseIteratorWithKey interface {
+type ReverseIteratorWithKey[T comparable, P any] interface {
 	// Prev moves the iterator to the previous element and returns true if there was a previous element in the container.
 	// If Prev() returns true, then previous element's key and value can be retrieved by Key() and Value().
 	// Modifies the state of the iterator.
@@ -105,5 +105,5 @@ type ReverseIteratorWithKey interface {
 	// Modifies the state of the iterator.
 	Last() bool
 
-	IteratorWithKey
+	IteratorWithKey[T, P]
 }

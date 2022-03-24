@@ -9,11 +9,11 @@
 // Reference: https://en.wikipedia.org/wiki/Tree_%28data_structure%29
 package trees
 
-import "github.com/emirpasic/gods/containers"
+import "github.com/lemonyxk/gods/containers"
 
 // Tree interface that all trees implement
-type Tree interface {
-	containers.Container
+type Tree[T comparable, P any] interface {
+	containers.Container[P]
 	// Empty() bool
 	// Size() int
 	// Clear()

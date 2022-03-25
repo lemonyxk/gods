@@ -13,32 +13,33 @@ package linkedhashmap
 
 import (
 	"fmt"
-	"github.com/emirpasic/gods/lists/doublylinkedlist"
-	"github.com/emirpasic/gods/maps"
 	"strings"
+
+	"github.com/lemonyxk/gods/lists/doublylinkedlist"
+	"github.com/lemonyxk/gods/maps"
 )
 
-func assertMapImplementation() {
-	var _ maps.Map = (*Map)(nil)
+func assertMapImplementation[T comparable, P any]() {
+	var _ maps.Map[T, P] = (*Map[T, P])(nil)
 }
 
 // Map holds the elements in a regular hash table, and uses doubly-linked list to store key ordering.
-type Map struct {
-	table    map[interface{}]interface{}
-	ordering *doublylinkedlist.List
+type Map[T comparable, P any] struct {
+	table    map[T]P
+	ordering *doublylinkedlist.List[T]
 }
 
 // New instantiates a linked-hash-map.
-func New() *Map {
-	return &Map{
-		table:    make(map[interface{}]interface{}),
-		ordering: doublylinkedlist.New(),
+func New[T comparable, P any]() *Map[T, P] {
+	return &Map[T, P]{
+		table:    make(map[T]P),
+		ordering: doublylinkedlist.New[T](),
 	}
 }
 
 // Put inserts key-value pair into the map.
 // Key should adhere to the comparator's type assertion, otherwise method panics.
-func (m *Map) Put(key interface{}, value interface{}) {
+func (m *Map[T, P]) Put(key T, value P) {
 	if _, contains := m.table[key]; !contains {
 		m.ordering.Append(key)
 	}
@@ -48,15 +49,14 @@ func (m *Map) Put(key interface{}, value interface{}) {
 // Get searches the element in the map by key and returns its value or nil if key is not found in tree.
 // Second return parameter is true if key was found, otherwise false.
 // Key should adhere to the comparator's type assertion, otherwise method panics.
-func (m *Map) Get(key interface{}) (value interface{}, found bool) {
-	value = m.table[key]
-	found = value != nil
+func (m *Map[T, P]) Get(key T) (value P, found bool) {
+	value, found = m.table[key]
 	return
 }
 
 // Remove removes the element from the map by key.
 // Key should adhere to the comparator's type assertion, otherwise method panics.
-func (m *Map) Remove(key interface{}) {
+func (m *Map[T, P]) Remove(key T) {
 	if _, contains := m.table[key]; contains {
 		delete(m.table, key)
 		index := m.ordering.IndexOf(key)
@@ -65,23 +65,23 @@ func (m *Map) Remove(key interface{}) {
 }
 
 // Empty returns true if map does not contain any elements
-func (m *Map) Empty() bool {
+func (m *Map[T, P]) Empty() bool {
 	return m.Size() == 0
 }
 
 // Size returns number of elements in the map.
-func (m *Map) Size() int {
+func (m *Map[T, P]) Size() int {
 	return m.ordering.Size()
 }
 
 // Keys returns all keys in-order
-func (m *Map) Keys() []interface{} {
+func (m *Map[T, P]) Keys() []T {
 	return m.ordering.Values()
 }
 
 // Values returns all values in-order based on the key.
-func (m *Map) Values() []interface{} {
-	values := make([]interface{}, m.Size())
+func (m *Map[T, P]) Values() []P {
+	values := make([]P, m.Size())
 	count := 0
 	it := m.Iterator()
 	for it.Next() {
@@ -92,13 +92,13 @@ func (m *Map) Values() []interface{} {
 }
 
 // Clear removes all elements from the map.
-func (m *Map) Clear() {
-	m.table = make(map[interface{}]interface{})
+func (m *Map[T, P]) Clear() {
+	m.table = make(map[T]P)
 	m.ordering.Clear()
 }
 
 // String returns a string representation of container
-func (m *Map) String() string {
+func (m *Map[T, P]) String() string {
 	str := "LinkedHashMap\nmap["
 	it := m.Iterator()
 	for it.Next() {

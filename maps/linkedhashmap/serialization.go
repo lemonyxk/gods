@@ -7,17 +7,18 @@ package linkedhashmap
 import (
 	"bytes"
 	"encoding/json"
-	"github.com/emirpasic/gods/containers"
-	"github.com/emirpasic/gods/utils"
+
+	"github.com/lemonyxk/gods/containers"
+	"github.com/lemonyxk/gods/utils"
 )
 
-func assertSerializationImplementation() {
-	var _ containers.JSONSerializer = (*Map)(nil)
-	var _ containers.JSONDeserializer = (*Map)(nil)
+func assertSerializationImplementation[T comparable, P any]() {
+	var _ containers.JSONSerializer = (*Map[T, P])(nil)
+	var _ containers.JSONDeserializer = (*Map[T, P])(nil)
 }
 
 // ToJSON outputs the JSON representation of map.
-func (m *Map) ToJSON() ([]byte, error) {
+func (m *Map[T, P]) ToJSON() ([]byte, error) {
 	var b []byte
 	buf := bytes.NewBuffer(b)
 
@@ -55,7 +56,7 @@ func (m *Map) ToJSON() ([]byte, error) {
 }
 
 // FromJSON populates map from the input JSON representation.
-//func (m *Map) FromJSON(data []byte) error {
+// func (m *Map) FromJSON(data []byte) error {
 //	elements := make(map[string]interface{})
 //	err := json.Unmarshal(data, &elements)
 //	if err == nil {
@@ -65,11 +66,11 @@ func (m *Map) ToJSON() ([]byte, error) {
 //		}
 //	}
 //	return err
-//}
+// }
 
 // FromJSON populates map from the input JSON representation.
-func (m *Map) FromJSON(data []byte) error {
-	elements := make(map[string]interface{})
+func (m *Map[T, P]) FromJSON(data []byte) error {
+	elements := make(map[string]P)
 	err := json.Unmarshal(data, &elements)
 	if err != nil {
 		return err
@@ -96,7 +97,7 @@ func (m *Map) FromJSON(data []byte) error {
 	m.Clear()
 
 	for _, key := range keys {
-		m.Put(key, elements[key.(string)])
+		m.Put(key.(T), elements[key.(string)])
 	}
 
 	return nil

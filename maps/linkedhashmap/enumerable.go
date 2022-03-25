@@ -4,14 +4,17 @@
 
 package linkedhashmap
 
-import "github.com/emirpasic/gods/containers"
+import (
+	"github.com/lemonyxk/gods/containers"
+	"github.com/lemonyxk/gods/utils"
+)
 
-func assertEnumerableImplementation() {
-	var _ containers.EnumerableWithKey = (*Map)(nil)
+func assertEnumerableImplementation[T comparable, P any]() {
+	var _ containers.EnumerableWithKey[T, P] = (*Map[T, P])(nil)
 }
 
 // Each calls the given function once for each element, passing that element's key and value.
-func (m *Map) Each(f func(key interface{}, value interface{})) {
+func (m *Map[T, P]) Each(f func(key T, value P)) {
 	iterator := m.Iterator()
 	for iterator.Next() {
 		f(iterator.Key(), iterator.Value())
@@ -20,8 +23,8 @@ func (m *Map) Each(f func(key interface{}, value interface{})) {
 
 // Map invokes the given function once for each element and returns a container
 // containing the values returned by the given function as key/value pairs.
-func (m *Map) Map(f func(key1 interface{}, value1 interface{}) (interface{}, interface{})) *Map {
-	newMap := New()
+func (m *Map[T, P]) Map(f func(key1 T, value1 P) (T, P)) *Map[T, P] {
+	newMap := New[T, P]()
 	iterator := m.Iterator()
 	for iterator.Next() {
 		key2, value2 := f(iterator.Key(), iterator.Value())
@@ -31,8 +34,8 @@ func (m *Map) Map(f func(key1 interface{}, value1 interface{}) (interface{}, int
 }
 
 // Select returns a new container containing all elements for which the given function returns a true value.
-func (m *Map) Select(f func(key interface{}, value interface{}) bool) *Map {
-	newMap := New()
+func (m *Map[T, P]) Select(f func(key T, value P) bool) *Map[T, P] {
+	newMap := New[T, P]()
 	iterator := m.Iterator()
 	for iterator.Next() {
 		if f(iterator.Key(), iterator.Value()) {
@@ -44,7 +47,7 @@ func (m *Map) Select(f func(key interface{}, value interface{}) bool) *Map {
 
 // Any passes each element of the container to the given function and
 // returns true if the function ever returns true for any element.
-func (m *Map) Any(f func(key interface{}, value interface{}) bool) bool {
+func (m *Map[T, P]) Any(f func(key T, value P) bool) bool {
 	iterator := m.Iterator()
 	for iterator.Next() {
 		if f(iterator.Key(), iterator.Value()) {
@@ -56,7 +59,7 @@ func (m *Map) Any(f func(key interface{}, value interface{}) bool) bool {
 
 // All passes each element of the container to the given function and
 // returns true if the function returns true for all elements.
-func (m *Map) All(f func(key interface{}, value interface{}) bool) bool {
+func (m *Map[T, P]) All(f func(key T, value P) bool) bool {
 	iterator := m.Iterator()
 	for iterator.Next() {
 		if !f(iterator.Key(), iterator.Value()) {
@@ -69,12 +72,12 @@ func (m *Map) All(f func(key interface{}, value interface{}) bool) bool {
 // Find passes each element of the container to the given function and returns
 // the first (key,value) for which the function is true or nil,nil otherwise if no element
 // matches the criteria.
-func (m *Map) Find(f func(key interface{}, value interface{}) bool) (interface{}, interface{}) {
+func (m *Map[T, P]) Find(f func(key T, value P) bool) (T, P) {
 	iterator := m.Iterator()
 	for iterator.Next() {
 		if f(iterator.Key(), iterator.Value()) {
 			return iterator.Key(), iterator.Value()
 		}
 	}
-	return nil, nil
+	return utils.AnyEmpty[T](), utils.AnyEmpty[P]()
 }

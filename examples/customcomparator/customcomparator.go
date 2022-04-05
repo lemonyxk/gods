@@ -6,7 +6,8 @@ package main
 
 import (
 	"fmt"
-	"github.com/emirpasic/gods/sets/treeset"
+
+	"github.com/lemonyxk/gods/sets/treeset"
 )
 
 // User model (id and name)
@@ -34,7 +35,7 @@ func byID(a, b interface{}) int {
 
 // CustomComparatorExample to demonstrate basic usage of CustomComparator
 func main() {
-	set := treeset.NewWith(byID)
+	set := treeset.NewWith[User](byID)
 
 	set.Add(User{2, "Second"})
 	set.Add(User{3, "Third"})

@@ -6,12 +6,13 @@ package main
 
 import (
 	"fmt"
-	"github.com/emirpasic/gods/maps/treemap"
+
+	"github.com/lemonyxk/gods/maps/treemap"
 )
 
 // IteratorWithKeyExample to demonstrate basic usage of IteratorWithKey
 func main() {
-	m := treemap.NewWithIntComparator()
+	m := treemap.NewWithIntComparator[int, string]()
 	m.Put(1, "a")
 	m.Put(2, "b")
 	m.Put(3, "a")
@@ -42,7 +43,7 @@ func main() {
 	}
 
 	if it.First() {
-		fmt.Print("\nFirst key: ", it.Key())     // First key: 0
+		fmt.Print("\nFirst key: ", it.Key())     // First key: 1
 		fmt.Print("\nFirst value: ", it.Value()) // First value: a
 	}
 

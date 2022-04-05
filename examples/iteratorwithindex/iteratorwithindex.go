@@ -6,12 +6,13 @@ package main
 
 import (
 	"fmt"
-	"github.com/emirpasic/gods/sets/treeset"
+
+	"github.com/lemonyxk/gods/sets/treeset"
 )
 
 // IteratorWithIndexExample to demonstrate basic usage of IteratorWithIndex
 func main() {
-	set := treeset.NewWithStringComparator()
+	set := treeset.NewWithStringComparator[string]()
 	set.Add("a", "b", "c")
 	it := set.Iterator()
 
@@ -45,7 +46,7 @@ func main() {
 	}
 
 	if it.Last() {
-		fmt.Print("\nLast index: ", it.Index()) // Last index: 3
+		fmt.Print("\nLast index: ", it.Index()) // Last index: 2
 		fmt.Print("\nLast value: ", it.Value()) // Last value: c
 	}
 }

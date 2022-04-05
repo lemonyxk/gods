@@ -6,12 +6,13 @@ package main
 
 import (
 	"fmt"
-	rbt "github.com/emirpasic/gods/trees/redblacktree"
+
+	rbt "github.com/lemonyxk/gods/trees/redblacktree"
 )
 
 // RedBlackTreeExample to demonstrate basic usage of RedBlackTree
 func main() {
-	tree := rbt.NewWithIntComparator() // empty(keys are of type int)
+	tree := rbt.NewWithIntComparator[int, string]() // empty(keys are of type int)
 
 	tree.Put(1, "x") // 1->x
 	tree.Put(2, "b") // 1->x, 2->b (in order)

@@ -4,19 +4,19 @@
 
 package arraystack
 
-import "github.com/emirpasic/gods/containers"
+import "github.com/lemonyxk/gods/containers"
 
-func assertSerializationImplementation() {
-	var _ containers.JSONSerializer = (*Stack)(nil)
-	var _ containers.JSONDeserializer = (*Stack)(nil)
+func assertSerializationImplementation[T comparable]() {
+	var _ containers.JSONSerializer = (*Stack[T])(nil)
+	var _ containers.JSONDeserializer = (*Stack[T])(nil)
 }
 
 // ToJSON outputs the JSON representation of the stack.
-func (stack *Stack) ToJSON() ([]byte, error) {
+func (stack *Stack[T]) ToJSON() ([]byte, error) {
 	return stack.list.ToJSON()
 }
 
 // FromJSON populates the stack from the input JSON representation.
-func (stack *Stack) FromJSON(data []byte) error {
+func (stack *Stack[T]) FromJSON(data []byte) error {
 	return stack.list.FromJSON(data)
 }
